@@ -8,3 +8,7 @@ class Piece {
 		int piece_type;
 		int is_active = 1;
 };
+// # # # #
+// # # # #
+// # # # #
+// # # # #
