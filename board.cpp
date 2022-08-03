@@ -82,7 +82,7 @@ Piece *Board::generate(int number)
 			break;
 	}
 	for (int i = 0; i < 4; i++) {
-		if (board[p->coords[i].y][p->coords[i].x] == -1) {
+		if (board[p->coords[i].y][p->coords[i].x] == -1) { // piece can't be placed
 			return nullptr;
 		}
 	}
@@ -92,7 +92,7 @@ Piece *Board::generate(int number)
 }	
 
 void Board::init_piece(Piece p, int fill_value) 
-{
+{	// put the piece on the board
 	board[p.coords[0].y][p.coords[0].x] = fill_value;
 	board[p.coords[1].y][p.coords[1].x] = fill_value;
 	board[p.coords[2].y][p.coords[2].x] = fill_value;
@@ -104,12 +104,12 @@ bool Board::fall(Piece *p)
 	if (p == nullptr) {
 		return 0;
 	}
-	if (board[p->coords[0].y+1][p->coords[0].x] != -1 &&
+	if (board[p->coords[0].y+1][p->coords[0].x] != -1 && // hits placed pieces
 	    board[p->coords[1].y+1][p->coords[1].x] != -1 &&
 	    board[p->coords[2].y+1][p->coords[2].x] != -1 &&
 	    board[p->coords[3].y+1][p->coords[3].x] != -1) 
 	{
-		if ((p->coords[0].y + 1 < 20) &&
+		if ((p->coords[0].y + 1 < 20) && // hits the bottom
 		    (p->coords[1].y + 1 < 20) &&
 		    (p->coords[2].y + 1 < 20) &&
 		    (p->coords[3].y + 1 < 20)) 
@@ -135,12 +135,12 @@ bool Board::fall(Piece *p)
 
 bool Board::move_left(Piece* p) 
 {
-	if (board[p->coords[0].y][p->coords[0].x-1] != -1 &&
+	if (board[p->coords[0].y][p->coords[0].x-1] != -1 && // hits placed pieces
 	    board[p->coords[1].y][p->coords[1].x-1] != -1 &&
 	    board[p->coords[2].y][p->coords[2].x-1] != -1 &&
 	    board[p->coords[3].y][p->coords[3].x-1] != -1) 
 	{
-		if ((p->coords[0].x - 1 >= 0) &&
+		if ((p->coords[0].x - 1 >= 0) && // hits the left wall
 		    (p->coords[1].x - 1 >= 0) &&
 		    (p->coords[2].x - 1 >= 0) &&
 		    (p->coords[3].x - 1 >= 0)) 
@@ -164,12 +164,12 @@ bool Board::move_left(Piece* p)
 
 bool Board::move_right(Piece* p) 
 {
-	if (board[p->coords[0].y][p->coords[0].x+1] != -1 &&
+	if (board[p->coords[0].y][p->coords[0].x+1] != -1 && // hits placed pieces
 	    board[p->coords[1].y][p->coords[1].x+1] != -1 &&
 	    board[p->coords[2].y][p->coords[2].x+1] != -1 &&
 	    board[p->coords[3].y][p->coords[3].x+1] != -1) 
 	{
-		if ((p->coords[0].x + 1 < 10) &&
+		if ((p->coords[0].x + 1 < 10) && // hits the right wall
 		    (p->coords[1].x + 1 < 10) &&
 		    (p->coords[2].x + 1 < 10) &&
 		    (p->coords[3].x + 1 < 10)) 
@@ -193,6 +193,9 @@ bool Board::move_right(Piece* p)
 
 bool Board::rotate(Piece *p) 
 {
+	// rotation of the piece happens by first determining the rotation center (see Tetris SRS)
+	// and then applying formulas (x2 = Cx + Cy - y1) and (y2 = x1 + Cy - Cx) to every other
+	// block of the piece that is not a rotatoin center. 
 	if (p->piece_type == 1) {
 		return 0;
 	}
@@ -205,8 +208,8 @@ bool Board::rotate(Piece *p)
 	for (int i = 1; i < 4; i++) {
 		x2 = (cx+cy - p->coords[i].y);
 		y2 = (p->coords[i].x + cy-cx);
-		if (board[y2][x2] != -1) {
-			if (x2 >= 0 && x2 < 10 &&
+		if (board[y2][x2] != -1) {	  // check if result of the rotation hits placed piece
+			if (x2 >= 0 && x2 < 10 && // or the wall
 			    y2 >= 0 && y2 < 20) {
 				temp[i].x = x2;
 				temp[i].y = y2;
@@ -218,8 +221,8 @@ bool Board::rotate(Piece *p)
 		}
 	}
 	init_piece(*p, 0);
-	for (int i = 0; i < 4; i++) {
-		p->coords[i] = temp[i];
+	for (int i = 0; i < 4; i++) {	// rotation result were applied to a temporary struct
+		p->coords[i] = temp[i]; // and in case of the pass on checks is applied to the main piece
 	}
 	init_piece(*p, p->piece_type);
 	return 1;
@@ -238,11 +241,11 @@ void Board::turn_inactive(Piece *p)
 }
 
 bool Board::check_row(int row)
-{
+{	// check if the row is complete (filled with pieces blocks) and destroy it if that's the case
 	bool row_to_break;
-	for (int k = row; k < 20; k++) {
-		row_to_break = 1;
-		for (int i = 0; i < 10; i++) {
+	for (int k = row; k < 20; k++) { // the chosen row is the row on which the piece landed,
+		row_to_break = 1;	 // then, the check goes down the board to see if 
+		for (int i = 0; i < 10; i++) { // other blocks were affected
 			if (board[k][i] != -1) {
 				row_to_break = 0;
 				break;
