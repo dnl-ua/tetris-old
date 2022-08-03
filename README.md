@@ -1,1 +1,2 @@
-# Tetris (WIP)
+# Tetris (ncurses)
+Rewrite in C soon.

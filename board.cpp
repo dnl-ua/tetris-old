@@ -19,11 +19,11 @@ Piece *Board::generate(int number)
 			p->coords[3].x = 1;
 			break;
 		case 2: // I
-			p->coords[0].y = 1;
+			p->coords[0].y = 2;
 			p->coords[0].x = 0;
 			p->coords[1].y = 0;
 			p->coords[1].x = 0;
-			p->coords[2].y = 2;
+			p->coords[2].y = 1;
 			p->coords[2].x = 0;
 			p->coords[3].y = 3;
 			p->coords[3].x = 0;
