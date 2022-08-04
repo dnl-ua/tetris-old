@@ -1,5 +1,4 @@
 #include "board.h"
-#include <iostream>
 
 Piece *Board::generate(int number) 
 {
