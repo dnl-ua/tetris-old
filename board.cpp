@@ -245,7 +245,7 @@ bool Board::check_row(int row)
 	bool row_to_break;
 	for (int k = row; k < 20; k++) { // the chosen row is the row on which the piece landed,
 		row_to_break = 1;	 // then, the check goes down the board to see if 
-		for (int i = 0; i < 10; i++) { // other blocks were affected
+		for (int i = 0; i < 10; i++) { // other rows were also affected
 			if (board[k][i] != -1) {
 				row_to_break = 0;
 				break;
