@@ -1,7 +1,7 @@
-#include <iostream>
 #include <ncurses.h>
 #include <unistd.h>
 #include <random>
+#include <locale.h>
 #include "board.h"
 
 void print(Board);
@@ -9,6 +9,8 @@ void printn(Board);
 
 int main() 
 {
+	setlocale(LC_ALL, "");
+
 	initscr();
 	curs_set(FALSE);
 	clear();
@@ -26,6 +28,7 @@ int main()
 	std::random_device dev;
 	std::mt19937 rng(dev());
 	std::uniform_int_distribution<std::mt19937::result_type> dist7(1,7); 
+
 	p = b.generate(dist7(rng));
 
 	while (p != nullptr) {
@@ -81,10 +84,8 @@ void printn(Board b) {
 		for (int o = 0; o < 10; o++) {
 			if (b.board[i][o] == 0) {
 				printw("  ");
-			} else if (b.board[i][o] == -1) {
-				printw("+ ");
 			} else {
-				printw("%d ", b.board[i][o]);
+				printw("■ ");
 			}
 		}
 		printw("|\n");
